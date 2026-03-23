@@ -612,6 +612,60 @@ footer {
   }
 }
 
+/* Social sharing section in activity cards */
+.share-section {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.share-label {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+  margin-right: 2px;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 4px 9px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+  color: #444;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.share-button:hover {
+  background-color: #e8e8e8;
+  border-color: #bbb;
+  color: #222;
+}
+
+.share-copy:hover {
+  background-color: #e3f2fd;
+  border-color: #90caf9;
+  color: #1565c0;
+}
+
+.share-twitter:hover,
+.share-whatsapp:hover {
+  background-color: #e8f5e9;
+  border-color: #a5d6a7;
+  color: #1b5e20;
+}
+
 /* User controls in header */
 #user-controls {
   position: absolute;

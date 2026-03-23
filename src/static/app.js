@@ -472,6 +472,29 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Build a shareable URL for a specific activity
+  function getActivityShareUrl(activityName) {
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("activity", activityName);
+    return url.toString();
+  }
+
+  // Build a Twitter/X share URL for an activity
+  function getTwitterShareUrl(name, details) {
+    const schedule = formatSchedule(details);
+    const text = `Check out "${name}" at Mergington High! 📅 ${schedule}`;
+    const url = getActivityShareUrl(name);
+    return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+  }
+
+  // Build a WhatsApp share URL for an activity
+  function getWhatsAppShareUrl(name, details) {
+    const schedule = formatSchedule(details);
+    const text = `Check out "${name}" at Mergington High! 📅 ${schedule} ${getActivityShareUrl(name)}`;
+    return `https://wa.me/?text=${encodeURIComponent(text)}`;
+  }
+
   // Function to render a single activity card
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
@@ -569,6 +592,12 @@ document.addEventListener("DOMContentLoaded", () => {
         `
         }
       </div>
+      <div class="share-section">
+        <span class="share-label">Share:</span>
+        <button class="share-button share-copy" data-activity="${name}" title="Copy link to this activity">🔗 Copy Link</button>
+        <a class="share-button share-twitter" href="${getTwitterShareUrl(name, details)}" target="_blank" rel="noopener noreferrer" title="Share on Twitter/X">𝕏 Twitter</a>
+        <a class="share-button share-whatsapp" href="${getWhatsAppShareUrl(name, details)}" target="_blank" rel="noopener noreferrer" title="Share on WhatsApp">💬 WhatsApp</a>
+      </div>
     `;
 
     // Add click handlers for delete buttons
@@ -586,6 +615,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
+
+    // Add click handler for copy link button
+    const copyButton = activityCard.querySelector(".share-copy");
+    copyButton.addEventListener("click", () => {
+      const url = getActivityShareUrl(name);
+      navigator.clipboard.writeText(url).then(() => {
+        copyButton.textContent = "✅ Copied!";
+        setTimeout(() => {
+          copyButton.textContent = "🔗 Copy Link";
+        }, 2000);
+      }).catch(() => {
+        showMessage(`Could not copy automatically. Share this link: ${url}`, "error");
+      });
+    });
 
     activitiesList.appendChild(activityCard);
   }
@@ -864,5 +907,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize app
   checkAuthentication();
   initializeFilters();
+
+  // Pre-populate search from URL ?activity= parameter (used by share links)
+  const urlActivityParam = new URLSearchParams(window.location.search).get("activity");
+  if (urlActivityParam) {
+    searchQuery = urlActivityParam;
+    searchInput.value = urlActivityParam;
+  }
+
   fetchActivities();
 });
